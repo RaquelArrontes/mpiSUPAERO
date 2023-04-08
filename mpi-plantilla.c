@@ -88,8 +88,29 @@ int main(int argc, char** argv){
     NY = h//nProcsY*accuracy;
 
   //n cells that each processor will get
-    int ncellsx = w/nProcsX;
-    int ncellsy = h/nprocsY;
+    //int ncellsx = w/nProcsX;
+    //int ncellsy = h/nprocsY;
+    //int ncells_last_proc=
+
+  //HE INTENTADO HACER ESTE ALGORITMO PARA DIVIDIR EL NUM DE CELDAS POR PROCESADOR HACIENDO LO QUE DIJIMOS DE DEJAR UNO LIBRE POR SI NO ES DIVISIBLE EXACTO
+    int ncellsx, ncells_last_procx, ncellsy, ncells_last_procy;
+    if (w%nProcsX=!0){
+      ncellsx = NX/(nProcsX-1);
+      ncells_last_procx = NX-ncellsx*(nProcsX-1);
+    }
+    else{
+      ncellsx = NX/nProcs;
+      ncells_last_procx = NX/nProc;
+    }
+
+    if (h%nProcsY=!0){
+      ncellsy = NY/(nProcsY-1);
+      ncells_last_procy = NY-ncellsy*(nProcsY-1);
+    }
+    else{
+      ncellsx = NY/nProcs;
+      ncells_last_procy = NY/nProc;
+    }
     
 
     //Allocation of the image in and out fields and the Kernel Matrix
@@ -168,7 +189,8 @@ double *localField = NULL;
        }
 
 int nMessages;
-nMessages = ncellsx*ncellsy;
+//nMessages = ncellsx*ncellsy;
+nMessages = (ncellsx+ncells_last_procx)*(ncellsy+ncells_last_procy);
 
 //MPI_Send(localField, nMessages, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
 MPI_Request request;
